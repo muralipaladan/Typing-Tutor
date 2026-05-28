@@ -32,10 +32,9 @@
         .keyboard { display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 1050px; background-color: #0f172a; padding: 10px; border-radius: 10px; }
         .row { display: flex; justify-content: center; gap: 4px; width: 100%; }
         
-        /* Key Styling mimicking the Reference Image */
-        .key { background-color: var(--key-bg); border: 1px solid #475569; border-radius: 5px; color: var(--text-color); height: 44px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 4px; cursor: pointer; user-select: none; position: relative; }
+        .key { background-color: var(--key-bg); border: 1px solid #475569; border-radius: 5px; color: var(--text-color); height: 44px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 4px; cursor: pointer; user-select: none; position: relative; transition: all 0.1s; }
         
-        /* Legends Layout exactly like the Image */
+        /* Key Legends */
         .key-top-left { position: absolute; top: 2px; left: 4px; font-size: 11px; font-weight: bold; color: #94a3b8; }
         .key-top-right { position: absolute; top: 2px; right: 4px; font-size: 13px; font-weight: bold; color: #eab308; }
         .key-bottom-right { position: absolute; bottom: 2px; right: 4px; font-size: 15px; font-weight: bold; color: #38bdf8; }
@@ -44,6 +43,9 @@
         .key.active { background-color: var(--glow-color) !important; box-shadow: 0 0 15px var(--glow-color) !important; transform: scale(0.95); }
         .key.wrong-active { background-color: var(--error-color) !important; box-shadow: 0 0 15px var(--error-color) !important; }
         .key.active .key-top-left, .key.active .key-top-right, .key.active .key-bottom-right { color: #000 !important; }
+        
+        /* Caps Lock Active Glow */
+        .caps.active-caps { background-color: #059669 !important; border-color: #34d399; box-shadow: 0 0 15px #059669; }
 
         .key.backspace { flex: 1.8; align-items: center; justify-content: center; }
         .key.tab { flex: 1.5; align-items: center; justify-content: center; }
@@ -62,18 +64,7 @@
         .finger-node.finger-blink { background-color: var(--finger-glow) !important; border-color: #4ade80 !important; box-shadow: 0 0 20px var(--finger-glow); transform: translateY(-8px); color: black !important; }
 
         /* Aiswarya Signature Watermark */
-        .watermark {
-            position: absolute;
-            bottom: 20px;
-            right: 35px;
-            font-size: 32px;
-            font-weight: bold;
-            color: rgba(56, 189, 248, 0.25); /* Subtle transparent blue */
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            letter-spacing: 3px;
-            pointer-events: none; /* Prevents click issues */
-            z-index: 1000;
-        }
+        .watermark { position: absolute; bottom: 20px; right: 35px; font-size: 32px; font-weight: bold; color: rgba(56, 189, 248, 0.25); font-family: 'Segoe UI', Tahoma, sans-serif; letter-spacing: 3px; pointer-events: none; z-index: 1000; }
     </style>
 </head>
 <body>
@@ -116,16 +107,17 @@
         </div>
     </div>
 
-    <!-- Aiswarya Name Watermark -->
     <div class="watermark">Aiswarya</div>
 
     <script>
-        let currentLang = 'EN'; let typedText = ''; let currentTargetText = ''; let isShiftPressed = false;
+        let currentLang = 'EN'; let typedText = ''; let currentTargetText = ''; 
+        let isShiftPressed = false;
+        let isCapsLockOn = false;
 
         const lessons = {
             EN: { 
                 1: ["asdf jkl; asdf jkl;"], 2: ["quiet row type pure"], 3: ["pack box zinc matrix"], 
-                4: ["Kerala India Malappuram"], 5: ["1 2 3 4 5 6 7 8 9 0"]
+                4: ["Kerala India Malappuram Wandoor"], 5: ["1 2 3 4 5 6 7 8 9 0", "Aiswarya Typing Master"]
             },
             ML: { 
                 1: ["ോേ്ിു പതകചട"], 2: ["ൌൈാീൂ ഭങഘധഝ"], 3: ["െംനവലസ ,.യ"], 
@@ -134,7 +126,6 @@
             }
         };
 
-        // Layout strictly matching the provided Image "Inscript-keyboard-malayalam.jpg"
         const pcKeyboardRows = [
             [
                 {code: 'Backquote', normal: {eng: '`', mal: 'ൊ', finger: 'L5'}, shifted: {eng: '~', mal: 'ഒ', finger: 'L5'}},
@@ -206,16 +197,19 @@
                 const rowDiv = document.createElement('div'); rowDiv.className = 'row';
                 row.forEach(key => {
                     const btn = document.createElement('button'); 
-                    let state = isShiftPressed ? key.shifted : key.normal;
-                    btn.className = `key ${state.class || ''}`; btn.id = key.code;
                     
-                    if(state.class) {
-                        btn.innerHTML = `<span style="align-self:center; font-weight:bold; font-size:14px;">${state.eng}</span>`;
+                    // Logic to show english uppercase when shift XOR capslock is active
+                    let isEngUpper = isShiftPressed !== isCapsLockOn;
+                    let engDisplay = isEngUpper ? key.shifted.eng : key.normal.eng;
+                    
+                    btn.className = `key ${key.normal.class || ''}`; btn.id = key.code;
+                    if(key.code === 'CapsLock' && isCapsLockOn) btn.classList.add('active-caps');
+                    
+                    if(key.normal.class) {
+                        btn.innerHTML = `<span style="align-self:center; font-weight:bold; font-size:14px;">${key.normal.eng}</span>`;
                     } else {
-                        // Drawing legends exactly like the referenced image
                         let malShift = key.shifted.mal !== key.normal.mal ? key.shifted.mal : '';
                         let engTop = key.shifted.eng.toUpperCase();
-                        
                         btn.innerHTML = `
                             <span class="key-top-left">${engTop}</span>
                             <span class="key-top-right">${malShift}</span>
@@ -249,12 +243,17 @@
             document.querySelectorAll('.key').forEach(k => k.classList.remove('target-guide'));
             document.querySelectorAll('.finger-node').forEach(f => f.classList.remove('finger-blink'));
 
-            let targetCode = '', fingerId = '', requiresShift = false;
+            let targetCode = '', fingerId = '', requiresShift = false, requiresCaps = false;
             if (nextChar === ' ') { targetCode = 'Space'; fingerId = 'R1'; }
             else {
                 pcKeyboardRows.forEach(row => row.forEach(k => {
-                    if (k.normal.eng === nextChar || k.normal.mal === nextChar) { targetCode = k.code; fingerId = k.normal.finger; requiresShift = false; } 
-                    else if (k.shifted.eng === nextChar || k.shifted.mal === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = true; }
+                    if (currentLang === 'EN') {
+                        if (k.normal.eng === nextChar) { targetCode = k.code; fingerId = k.normal.finger; requiresShift = isCapsLockOn; } 
+                        else if (k.shifted.eng === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = !isCapsLockOn; }
+                    } else {
+                        if (k.normal.mal === nextChar) { targetCode = k.code; fingerId = k.normal.finger; requiresShift = false; } 
+                        else if (k.shifted.mal === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = true; }
+                    }
                 }));
             }
 
@@ -274,22 +273,52 @@
             let activeKey = null; pcKeyboardRows.forEach(row => row.forEach(k => { if(k.code === code) activeKey = k; }));
             if (!activeKey && code !== 'Space') return;
 
-            let inputChar = code === 'Space' ? ' ' : (isShiftPressed ? (currentLang === 'EN' ? activeKey.shifted.eng : activeKey.shifted.mal) : (currentLang === 'EN' ? activeKey.normal.eng : activeKey.normal.mal));
-            const keyEl = document.getElementById(code);
+            let inputChar = '';
+            if (code === 'Space') {
+                inputChar = ' ';
+            } else {
+                if (currentLang === 'EN') {
+                    inputChar = (isShiftPressed !== isCapsLockOn) ? activeKey.shifted.eng : activeKey.normal.eng;
+                } else {
+                    inputChar = isShiftPressed ? activeKey.shifted.mal : activeKey.normal.mal;
+                }
+            }
 
+            const keyEl = document.getElementById(code);
             if (inputChar && (inputChar === expected || (code === 'Space' && expected === ' '))) {
                 typedText += expected; updateTargetUI(); document.getElementById('ribbonDisplay').innerText = typedText;
                 keyEl?.classList.add('active'); setTimeout(() => keyEl?.classList.remove('active'), 100);
             } else { keyEl?.classList.add('wrong-active'); setTimeout(() => keyEl?.classList.remove('wrong-active'), 150); }
         }
 
+        // Event listeners capturing both CapsLock toggle and Shift hold
         window.addEventListener('keydown', (e) => { 
             if(e.code === 'Space') e.preventDefault(); 
-            if(e.key === 'Shift') { isShiftPressed = true; renderKeyboard(); } 
-            else { triggerKey(e.code); }
+            
+            if(e.key === 'CapsLock') { 
+                isCapsLockOn = e.getModifierState('CapsLock');
+                renderKeyboard(); 
+                return;
+            }
+            if(e.key === 'Shift') { 
+                isShiftPressed = true; 
+                renderKeyboard(); 
+                return;
+            } 
+            
+            triggerKey(e.code); 
         });
 
-        window.addEventListener('keyup', (e) => { if(e.key === 'Shift') { isShiftPressed = false; renderKeyboard(); } });
+        window.addEventListener('keyup', (e) => { 
+            if(e.key === 'Shift') { 
+                isShiftPressed = false; 
+                renderKeyboard(); 
+            }
+            if(e.key === 'CapsLock') {
+                isCapsLockOn = e.getModifierState('CapsLock');
+                renderKeyboard();
+            }
+        });
 
         function setLanguage(lang) { currentLang = lang; document.getElementById('btn-en').classList.toggle('active', lang === 'EN'); document.getElementById('btn-ml').classList.toggle('active', lang === 'ML'); loadLesson(); renderKeyboard(); }
         function resetApp() { typedText = ''; loadLesson(); }

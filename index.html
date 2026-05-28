@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QWERTY Typing Trainer with Finger Guide</title>
+    <title>Ultimate QWERTY Typing Trainer with Shift & Finger Guide</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -19,7 +19,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-        /* Display View Dashboard */
+        /* Dashboard Section */
         .display-section {
             height: 35vh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 15px;
             background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
@@ -28,18 +28,18 @@
         .selector { background-color: var(--key-bg); color: white; border: 2px solid #475569; padding: 6px 12px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; }
         .btn-mode { background-color: var(--key-bg); color: white; border: 2px solid transparent; padding: 6px 14px; font-size: 13px; font-weight: bold; border-radius: 6px; cursor: pointer; }
         .btn-mode.active { background-color: #0284c7; border-color: var(--glow-color); box-shadow: 0 0 10px var(--glow-color); }
-        .lesson-box { background-color: rgba(30, 41, 59, 0.8); border: 2px dashed #475569; padding: 10px 20px; border-radius: 8px; font-size: 24px; text-align: center; max-width: 85%; }
+        .lesson-box { background-color: rgba(30, 41, 59, 0.8); border: 2px dashed #475569; padding: 10px 20px; border-radius: 8px; font-size: 26px; text-align: center; max-width: 85%; }
         .lesson-box span.next-char { color: var(--target-glow); font-weight: bold; text-decoration: underline; text-shadow: 0 0 8px var(--target-glow); }
         .ribbon-container { width: 90%; max-width: 900px; background: #1e293b; padding: 10px 15px; border-radius: 6px; border-left: 4px solid var(--glow-color); overflow: hidden; white-space: nowrap; }
         .ribbon-text { display: inline-block; font-size: 26px; font-weight: bold; color: #ffffff; min-width: 100%; text-align: left; }
 
-        /* Keyboard View Layout */
+        /* Keyboard Section */
         .keyboard-section { height: 42vh; background-color: var(--keyboard-bg); display: flex; justify-content: center; align-items: center; padding: 10px; border-top: 3px solid #334155; }
         .keyboard { display: flex; flex-direction: column; gap: 5px; width: 100%; max-width: 950px; background-color: #0f172a; padding: 10px; border-radius: 10px; }
         .row { display: flex; justify-content: center; gap: 4px; width: 100%; }
         .key { background-color: var(--key-bg); border: 1px solid #475569; border-radius: 5px; color: var(--text-color); height: 46px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 4px 6px; cursor: pointer; user-select: none; }
         .key .eng-label { font-size: 14px; font-weight: bold; }
-        .key .mal-label { font-size: 12px; color: #94a3b8; align-self: flex-end; font-weight: bold; }
+        .key .mal-label { font-size: 13px; color: #38bdf8; align-self: flex-end; font-weight: bold; }
         
         .key.target-guide { background-color: #854d0e !important; border: 2px solid var(--target-glow); box-shadow: 0 0 12px var(--target-glow); animation: pulse 0.8s infinite alternate; }
         .key.active { background-color: var(--glow-color) !important; box-shadow: 0 0 15px var(--glow-color) !important; transform: scale(0.95); }
@@ -47,24 +47,21 @@
         .key.active .eng-label, .key.active .mal-label { color: #000 !important; }
 
         .key.backspace { flex: 1.8; align-items: center; justify-content: center; }
-        .key.caps { flex: 1.5; align-items: center; justify-content: center; }
         .key.enter { flex: 1.8; align-items: center; justify-content: center; }
         .key.shift { flex: 2; align-items: center; justify-content: center; }
         .key.space { flex: 8; justify-content: center; align-items: center; }
 
-        /* Hands & Fingers Animation Dashboard Panels */
+        /* Hands & Fingers Section */
         .hands-section { height: 23vh; background-color: #0f172a; display: flex; justify-content: center; gap: 120px; align-items: center; border-top: 2px solid #1e293b; padding: 5px; }
         .hand-container { display: flex; gap: 12px; align-items: flex-end; }
         .finger-node { background-color: #334155; border: 2px solid #475569; border-radius: 20px 20px 5px 5px; width: 32px; color: white; font-size: 11px; font-weight: bold; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 8px; transition: all 0.2s; }
         
-        /* Dynamic Height setup for natural hand looks */
-        #L5, #R5 { height: 60px; } /* Pinky */
-        #L4, #R4 { height: 80px; } /* Ring */
-        #L3, #R3 { height: 90px; } /* Middle */
-        #L2, #R2 { height: 82px; } /* Index */
-        #L1, #R1 { height: 45px; border-radius: 15px; width: 36px; } /* Thumb */
+        #L5, #R5 { height: 60px; } 
+        #L4, #R4 { height: 80px; } 
+        #L3, #R3 { height: 90px; } 
+        #L2, #R2 { height: 82px; } 
+        #L1, #R1 { height: 45px; border-radius: 15px; width: 36px; } 
 
-        /* Animated Active Finger state */
         .finger-node.finger-blink {
             background-color: var(--finger-glow) !important;
             border-color: #4ade80 !important;
@@ -81,10 +78,11 @@
             <button class="btn-mode active" id="btn-en" onclick="setLanguage('EN')">ENGLISH</button>
             <button class="btn-mode" id="btn-ml" onclick="setLanguage('ML')">മലയാളം</button>
             <select class="selector" id="lessonSelect" onchange="loadLesson()">
-                <option value="1">Class 1: Home Row Base</option>
+                <option value="1">Class 1: Home Row Focus</option>
                 <option value="2">Class 2: Top Row Reach</option>
                 <option value="3">Class 3: Bottom Row Reach</option>
-                <option value="4">Class 4: Word Training</option>
+                <option value="4">Class 4: Capital & Shift Layout</option>
+                <option value="5">Class 5: Short Sentences</option>
             </select>
             <button class="btn-mode" style="background-color: #ef4444;" onclick="resetApp()">Reset</button>
         </div>
@@ -97,6 +95,7 @@
     </div>
 
     <div class="hands-section">
+        <!-- LEFT HAND -->
         <div class="hand-container">
             <div class="finger-node" id="L5"><span>P</span></div>
             <div class="finger-node" id="L4"><span>R</span></div>
@@ -104,6 +103,7 @@
             <div class="finger-node" id="L2"><span>I</span></div>
             <div class="finger-node" id="L1"><span>T</span></div>
         </div>
+        <!-- RIGHT HAND -->
         <div class="hand-container">
             <div class="finger-node" id="R1"><span>T</span></div>
             <div class="finger-node" id="R2"><span>I</span></div>
@@ -115,34 +115,68 @@
 
     <script>
         let currentLang = 'EN'; let typedText = ''; let currentTargetText = '';
+        let isShiftPressed = false;
 
         const lessons = {
-            EN: { 1: ["asdf jkl;", "ff jj ss kk aa ll"], 2: ["quiet row type", "wet red power"], 3: ["pack box zinc", "lazy dog fox"], 4: ["kerala computer code"] },
-            ML: { 1: ["കഖഗഘ ങചഛജ", "കജ ഖഛ ഗച"], 2: ["ഞതഭര തഉഇഎ", "അമ്മ ആന ഇല"], 3: ["ടഠഡഢ ണതഥദ", "പന്ത് മരം തറ"], 4: ["കേരളം കമ്പ്യൂട്ടർ"] }
+            EN: { 
+                1: ["asdf jkl; asdf jkl;"], 
+                2: ["quiet row type pure"], 
+                3: ["pack box zinc matrix"], 
+                4: ["Kerala India Malappuram", "Wandoor Nilambur Sini"],
+                5: ["Practice builds great muscle memory."] 
+            },
+            ML: { 
+                1: ["കഗങ ചജഞ", "കഥ ജനം ചായ ജഗതി"], 
+                2: ["തഉഇഎ ഒഔ", "അമ്മ ആന ഇല ഈച്ച ഉരൽ"], 
+                3: ["ടഡണ തദധന", "പന്ത് മരം തറ ദയ നഖം"], 
+                4: ["ഖഘ ഛഝ ഠഢ ഥധ ഫഭ", "കേരളം എന്റെ മാതൃനാടാണ്"],
+                5: ["നിലമ്പൂർ വണ്ടൂർ മലപ്പുറം ജില്ല വഴി."] 
+            }
         };
 
+        // Complete Computer Keyboard Database with Normal and Shift States
         const pcKeyboardRows = [
             [
-                {code: 'KeyQ', eng: 'Q', mal: 'ഞ', finger: 'L5'}, {code: 'KeyW', eng: 'W', mal: 'ത', finger: 'L4'}, {code: 'KeyE', eng: 'E', mal: 'ഭ', finger: 'L3'}, 
-                {code: 'KeyR', eng: 'R', mal: 'ര', finger: 'L2'}, {code: 'KeyT', eng: 'T', mal: 'സ', finger: 'L2'}, {code: 'KeyY', eng: 'Y', mal: 'ഉ', finger: 'R2'}, 
-                {code: 'KeyU', eng: 'U', mal: 'ഇ', finger: 'R2'}, {code: 'KeyI', eng: 'I', mal: 'എ', finger: 'R3'}, {code: 'KeyO', eng: 'O', mal: 'ഒ', finger: 'R4'}, 
-                {code: 'KeyP', eng: 'P', mal: 'പ', finger: 'R5'}, {code: 'Backspace', eng: 'Backspace', mal: '←', class: 'backspace', finger: 'R5'}
+                {code: 'KeyQ', normal: {eng: 'q', mal: 'ഞ', finger: 'L5'}, shifted: {eng: 'Q', mal: 'ഔ', finger: 'L5'}},
+                {code: 'KeyW', normal: {eng: 'w', mal: 'ത', finger: 'L4'}, shifted: {eng: 'W', mal: 'ഐ', finger: 'L4'}},
+                {code: 'KeyE', normal: {eng: 'e', mal: 'ഭ', finger: 'L3'}, shifted: {eng: 'E', mal: 'ആ', finger: 'L3'}},
+                {code: 'KeyR', normal: {eng: 'r', mal: 'ര', finger: 'L2'}, shifted: {eng: 'R', mal: 'ഈ', finger: 'L2'}},
+                {code: 'KeyT', normal: {eng: 't', mal: 'സ', finger: 'L2'}, shifted: {eng: 'T', mal: 'ഊ', finger: 'L2'}},
+                {code: 'KeyY', normal: {eng: 'y', mal: 'ഉ', finger: 'R2'}, shifted: {eng: 'Y', mal: 'ഭ', finger: 'R2'}},
+                {code: 'KeyU', normal: {eng: 'u', mal: 'ഇ', finger: 'R2'}, shifted: {eng: 'U', mal: 'ങ', finger: 'R2'}},
+                {code: 'KeyI', normal: {eng: 'i', mal: 'എ', finger: 'R3'}, shifted: {eng: 'I', mal: 'ഘ', finger: 'R3'}},
+                {code: 'KeyO', normal: {eng: 'o', mal: 'ഒ', finger: 'R4'}, shifted: {eng: 'O', mal: 'ധ', finger: 'R4'}},
+                {code: 'KeyP', normal: {eng: 'p', mal: 'പ', finger: 'R5'}, shifted: {eng: 'P', mal: 'ഝ', finger: 'R5'}},
+                {code: 'Backspace', normal: {eng: 'Bksp', mal: '←', class: 'backspace', finger: 'R5'}, shifted: {eng: 'Bksp', mal: '←', class: 'backspace', finger: 'R5'}}
             ],
             [
-                {code: 'CapsLock', eng: 'Caps', mal: 'Caps', class: 'caps'},
-                {code: 'KeyA', eng: 'A', mal: 'ക', finger: 'L5'}, {code: 'KeyS', eng: 'S', mal: 'ഖ', finger: 'L4'}, {code: 'KeyD', eng: 'D', mal: 'ഗ', finger: 'L3'}, 
-                {code: 'KeyF', eng: 'F', mal: 'ഘ', finger: 'L2'}, {code: 'KeyG', eng: 'G', mal: 'ങ', finger: 'L2'}, {code: 'KeyH', eng: 'H', mal: 'ച', finger: 'R2'}, 
-                {code: 'KeyJ', eng: 'J', mal: 'ഛ', finger: 'R2'}, {code: 'KeyK', eng: 'K', mal: 'ജ', finger: 'R3'}, {code: 'KeyL', eng: 'L', mal: 'ഝ', finger: 'R4'}, 
-                {code: 'Semicolon', eng: ';', mal: 'യ', finger: 'R5'}, {code: 'Enter', eng: 'Enter', mal: '↵', class: 'enter', finger: 'R5'}
+                {code: 'KeyA', normal: {eng: 'a', mal: 'ക', finger: 'L5'}, shifted: {eng: 'A', mal: 'ഓ', finger: 'L5'}},
+                {code: 'KeyS', normal: {eng: 's', mal: 'ഖ', finger: 'L4'}, shifted: {eng: 'S', mal: 'ഏ', finger: 'L4'}},
+                {code: 'KeyD', normal: {eng: 'd', mal: 'ഗ', finger: 'L3'}, shifted: {eng: 'D', mal: 'അ', finger: 'L3'}},
+                {code: 'KeyF', normal: {eng: 'f', mal: 'ഘ', finger: 'L2'}, shifted: {eng: 'F', mal: 'ഇ', finger: 'L2'}},
+                {code: 'KeyG', normal: {eng: 'g', mal: 'ങ', finger: 'L2'}, shifted: {eng: 'G', mal: 'ഉ', finger: 'L2'}},
+                {code: 'KeyH', normal: {eng: 'h', mal: 'ച', finger: 'R2'}, shifted: {eng: 'H', mal: 'ഫ', finger: 'R2'}},
+                {code: 'KeyJ', normal: {eng: 'j', mal: 'ഛ', finger: 'R2'}, shifted: {eng: 'J', mal: 'റ', finger: 'R2'}},
+                {code: 'KeyK', normal: {eng: 'k', mal: 'ജ', finger: 'R3'}, shifted: {eng: 'K', mal: 'ള', finger: 'R3'}},
+                {code: 'KeyL', normal: {eng: 'l', mal: 'ഝ', finger: 'R4'}, shifted: {eng: 'L', mal: 'ഴ', finger: 'R4'}},
+                {code: 'Semicolon', normal: {eng: ';', mal: 'യ', finger: 'R5'}, shifted: {eng: ':', mal: 'ഞ', finger: 'R5'}},
+                {code: 'Enter', normal: {eng: 'Enter', mal: '↵', class: 'enter', finger: 'R5'}, shifted: {eng: 'Enter', mal: '↵', class: 'enter', finger: 'R5'}}
             ],
             [
-                {code: 'ShiftLeft', eng: 'Shift', mal: 'Shift', class: 'shift'},
-                {code: 'KeyZ', eng: 'Z', mal: 'ട', finger: 'L5'}, {code: 'KeyX', eng: 'X', mal: 'ഠ', finger: 'L4'}, {code: 'KeyC', eng: 'C', mal: 'ഡ', finger: 'L3'}, 
-                {code: 'KeyV', eng: 'V', mal: 'ഢ', finger: 'L2'}, {code: 'KeyB', eng: 'B', mal: 'ണ', finger: 'L2'}, {code: 'KeyN', eng: 'N', mal: 'ന', finger: 'R2'}, 
-                {code: 'KeyM', eng: 'M', mal: 'ഥ', finger: 'R2'}, {code: 'Comma', eng: ',', mal: 'ദ', finger: 'R3'}, {code: 'Period', eng: '.', mal: 'ധ', finger: 'R4'},
-                {code: 'Slash', eng: '/', mal: 'ല', finger: 'R5'}
+                {code: 'ShiftLeft', normal: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'L5'}, shifted: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'L5'}},
+                {code: 'KeyZ', normal: {eng: 'z', mal: 'ട', finger: 'L5'}, shifted: {eng: 'Z', mal: 'എ', finger: 'L5'}},
+                {code: 'KeyX', normal: {eng: 'x', mal: 'ഠ', finger: 'L4'}, shifted: {eng: 'X', mal: 'ഒ', finger: 'L4'}},
+                {code: 'KeyC', normal: {eng: 'c', mal: 'ഡ', finger: 'L3'}, shifted: {eng: 'C', mal: 'ണ', finger: 'L3'}},
+                {code: 'KeyV', normal: {eng: 'v', mal: 'ഢ', finger: 'L2'}, shifted: {eng: 'V', mal: 'ഠ', finger: 'L2'}},
+                {code: 'KeyB', normal: {eng: 'b', mal: 'ണ', finger: 'L2'}, shifted: {eng: 'B', mal: 'ല', finger: 'L2'}},
+                {code: 'KeyN', normal: {eng: 'n', mal: 'ത', finger: 'R2'}, shifted: {eng: 'N', mal: 'ഛ', finger: 'R2'}},
+                {code: 'KeyM', normal: {eng: 'm', mal: 'ഥ', finger: 'R2'}, shifted: {eng: 'M', mal: 'ശ', finger: 'R2'}},
+                {code: 'Comma', normal: {eng: ',', mal: 'ദ', finger: 'R3'}, shifted: {eng: '<', mal: 'ഷ', finger: 'R3'}},
+                {code: 'Period', normal: {eng: '.', mal: 'ധ', finger: 'R4'}, shifted: {eng: '>', mal: 'ഥ', finger: 'R4'}},
+                {code: 'Slash', normal: {eng: '/', mal: 'ന', finger: 'R5'}, shifted: {eng: '?', mal: 'ൿ', finger: 'R5'}},
+                {code: 'ShiftRight', normal: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'R5'}, shifted: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'R5'}}
             ],
-            [ {code: 'Space', eng: 'Space', mal: ' ', class: 'space', finger: 'R1'} ]
+            [ {code: 'Space', normal: {eng: 'Space', mal: ' ', class: 'space', finger: 'R1'}, shifted: {eng: 'Space', mal: ' ', class: 'space', finger: 'R1'}} ]
         ];
 
         function renderKeyboard() {
@@ -150,8 +184,12 @@
             pcKeyboardRows.forEach(row => {
                 const rowDiv = document.createElement('div'); rowDiv.className = 'row';
                 row.forEach(key => {
-                    const btn = document.createElement('button'); btn.className = `key ${key.class || ''}`; btn.id = key.code;
-                    btn.innerHTML = key.class ? `<span class="eng-label" style="align-self:center;">${key.eng}</span>` : `<span class="eng-label">${key.eng}</span><span class="mal-label">${key.mal}</span>`;
+                    const btn = document.createElement('button'); 
+                    let state = isShiftPressed ? key.shifted : key.normal;
+                    
+                    btn.className = `key ${state.class || ''}`; btn.id = key.code;
+                    btn.innerHTML = state.class ? `<span class="eng-label" style="align-self:center;">${state.eng}</span>` : `<span class="eng-label">${state.eng}</span><span class="mal-label">${state.mal}</span>`;
+                    
                     btn.onclick = () => triggerKey(key.code);
                     rowDiv.appendChild(btn);
                 });
@@ -167,29 +205,46 @@
         }
 
         function updateTargetUI() {
-            // Target Box Layout logic
             const box = document.getElementById('targetBox'); let progress = typedText.length;
             if (progress >= currentTargetText.length) {
-                box.innerHTML = `<span style='color:#22c55e; font-weight:bold;'>Excellent! Next...</span>`;
+                box.innerHTML = `<span style='color:#22c55e; font-weight:bold;'>Superb! Loading next...</span>`;
                 setTimeout(loadLesson, 1200); return;
             }
             let typedPart = currentTargetText.substring(0, progress); let nextChar = currentTargetText.charAt(progress); let remaining = currentTargetText.substring(progress + 1);
             box.innerHTML = `<span style="color:#22c55e;">${typedPart}</span><span class="next-char">${nextChar === ' ' ? '␣' : nextChar}</span><span>${remaining}</span>`;
 
-            // Active Key & Finger Track engine
+            // Reset indicators
             document.querySelectorAll('.key').forEach(k => k.classList.remove('target-guide'));
             document.querySelectorAll('.finger-node').forEach(f => f.classList.remove('finger-blink'));
 
-            let targetCode = '', fingerId = '';
-            if (nextChar === ' ') { targetCode = 'Space'; fingerId = 'R1'; }
-            else {
+            let targetCode = '', fingerId = '', requiresShift = false;
+            
+            if (nextChar === ' ') { 
+                targetCode = 'Space'; fingerId = 'R1'; 
+            } else {
                 pcKeyboardRows.forEach(row => row.forEach(k => {
-                    let c = currentLang === 'EN' ? k.eng : k.mal;
-                    if(c && c.toLowerCase() === nextChar.toLowerCase()) { targetCode = k.code; fingerId = k.finger; }
+                    if (k.normal.eng === nextChar || k.normal.mal === nextChar) {
+                        targetCode = k.code; fingerId = k.normal.finger; requiresShift = false;
+                    } else if (k.shifted.eng === nextChar || k.shifted.mal === nextChar) {
+                        targetCode = k.code; fingerId = k.shifted.finger; requiresShift = true;
+                    }
                 }));
             }
+
             if (targetCode) document.getElementById(targetCode)?.classList.add('target-guide');
             if (fingerId) document.getElementById(fingerId)?.classList.add('finger-blink');
+            
+            // Highlight Shift Key if needed
+            if (requiresShift) {
+                // If character is typed on left side, highlight right shift, and vice versa
+                if (fingerId.startsWith('L')) {
+                    document.getElementById('ShiftRight')?.classList.add('target-guide');
+                    document.getElementById('R5')?.classList.add('finger-blink'); // Pinky for Shift
+                } else {
+                    document.getElementById('ShiftLeft')?.classList.add('target-guide');
+                    document.getElementById('L5')?.classList.add('finger-blink'); // Pinky for Shift
+                }
+            }
         }
 
         function triggerKey(code) {
@@ -201,10 +256,17 @@
             pcKeyboardRows.forEach(row => row.forEach(k => { if(k.code === code) activeKey = k; }));
             if (!activeKey && code !== 'Space') return;
 
-            let inputChar = code === 'Space' ? ' ' : (currentLang === 'EN' ? activeKey.eng : activeKey.mal);
+            let inputChar = '';
+            if (code === 'Space') {
+                inputChar = ' ';
+            } else {
+                let state = isShiftPressed ? activeKey.shifted : activeKey.normal;
+                inputChar = currentLang === 'EN' ? state.eng : state.mal;
+            }
+
             const keyEl = document.getElementById(code);
 
-            if (inputChar && (inputChar.toLowerCase() === expected.toLowerCase() || (code === 'Space' && expected === ' '))) {
+            if (inputChar && (inputChar === expected || (code === 'Space' && expected === ' '))) {
                 typedText += expected; updateTargetUI(); document.getElementById('ribbonDisplay').innerText = typedText;
                 keyEl?.classList.add('active'); setTimeout(() => keyEl?.classList.remove('active'), 100);
             } else {
@@ -212,11 +274,27 @@
             }
         }
 
-        window.addEventListener('keydown', (e) => { if(e.code === 'Space') e.preventDefault(); triggerKey(e.code); });
+        // Physical Keyboard Event Bindings (Shift Key Watchers)
+        window.addEventListener('keydown', (e) => { 
+            if(e.code === 'Space') e.preventDefault(); 
+            if(e.key === 'Shift') {
+                isShiftPressed = true;
+                renderKeyboard(); // Dynamic Layout repaint
+            } else {
+                triggerKey(e.code); 
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if(e.key === 'Shift') {
+                isShiftPressed = false;
+                renderKeyboard(); // Normal mode repaint
+            }
+        });
+
         function setLanguage(lang) { currentLang = lang; document.getElementById('btn-en').classList.toggle('active', lang === 'EN'); document.getElementById('btn-ml').classList.toggle('active', lang === 'ML'); loadLesson(); renderKeyboard(); }
         function resetApp() { typedText = ''; loadLesson(); }
         setTimeout(() => { loadLesson(); renderKeyboard(); }, 200);
     </script>
 </body>
 </html>
-

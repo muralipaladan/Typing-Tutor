@@ -58,10 +58,10 @@
         
         .key { background-color: var(--key-bg); border: 1px solid #475569; border-radius: 5px; color: var(--text-color); height: 42px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 4px; cursor: pointer; user-select: none; position: relative; transition: all 0.1s; }
         
-        /* Legends properly positioned based on image */
+        /* Key Legends Styling */
         .key-top-left { position: absolute; top: 2px; left: 4px; font-size: 11px; font-weight: bold; color: #94a3b8; }
-        .key-top-right { position: absolute; top: 2px; right: 4px; font-size: 13px; font-weight: bold; color: #eab308; } /* Shift / Top */
-        .key-bottom-right { position: absolute; bottom: 2px; right: 4px; font-size: 15px; font-weight: bold; color: #38bdf8; } /* Normal / Bottom */
+        .key-top-right { position: absolute; top: 2px; right: 4px; font-size: 13px; font-weight: bold; color: #eab308; } /* Shift/Caps Character */
+        .key-bottom-right { position: absolute; bottom: 2px; right: 4px; font-size: 15px; font-weight: bold; color: #38bdf8; } /* Normal Character */
         
         .key.target-guide { background-color: #854d0e !important; border: 2px solid var(--target-glow); box-shadow: 0 0 12px var(--target-glow); animation: target-pulse 0.8s infinite alternate; }
         .key.active { background-color: var(--glow-color) !important; box-shadow: 0 0 15px var(--glow-color) !important; transform: scale(0.95); }
@@ -79,7 +79,7 @@
             display: flex; justify-content: center; width: 100%;
         }
         .hands-container-layout {
-            display: flex; justify-content: space-between; /* Keeps hands on extreme left and right */
+            display: flex; justify-content: space-between; 
             align-items: center; width: 100%; max-width: 1050px; 
             padding: 5px 40px; 
         }
@@ -101,14 +101,14 @@
         <div class="top-controls">
             <div class="lang-selectors">
                 <button class="btn-mode active" id="btn-en" onclick="setLanguage('EN')">ENGLISH</button>
-                <button class="btn-mode" id="btn-ml" onclick="setLanguage('ML')">മലയാളം (InScript)</button>
+                <button class="btn-mode" id="btn-ml" onclick="setLanguage('ML')">മലയാളം (Google InScript)</button>
             </div>
             <select class="selector" id="lessonSelect" onchange="loadLesson()">
-                <option value="1">Lesson 1: Normal Base (Bottom Letters)</option>
-                <option value="2">Lesson 2: Shift Focus (Top Letters)</option>
+                <option value="1">Lesson 1: Normal Keys (Bottom Letters)</option>
+                <option value="2">Lesson 2: Shift/Caps Keys (Top Letters)</option>
                 <option value="3">Lesson 3: Mixed Practice</option>
-                <option value="4">Lesson 4: Capital Letters & Flow</option>
-                <option value="5">Lesson 5: Google InScript Chillus</option>
+                <option value="4">Lesson 4: Capital Letters & Chillus</option>
+                <option value="5">Lesson 5: Paragraphs & Speed Test</option>
             </select>
             <button class="btn-mode" style="background-color: #ef4444;" onclick="resetApp()">Restart Lesson</button>
         </div>
@@ -179,12 +179,12 @@
             }
         };
 
-        // Exact mapping from Google InScript screenshots provided
+        // Exact mapping from Google InScript screenshots (1.png & 2_2.png)
         const pcKeyboardRows = [
             [
                 {code: 'Backquote', normal: {eng: '`', mal: 'ൊ', finger: 'L5'}, shifted: {eng: '~', mal: 'ഒ', finger: 'L5'}},
-                {code: 'Digit1', normal: {eng: '1', mal: '1', finger: 'L5'}, shifted: {eng: '!', mal: '!', finger: 'L5'}},
-                {code: 'Digit2', normal: {eng: '2', mal: '2', finger: 'L4'}, shifted: {eng: '@', mal: '@', finger: 'L4'}},
+                {code: 'Digit1', normal: {eng: '1', mal: '1', finger: 'L5'}, shifted: {eng: '!', mal: '', finger: 'L5'}},
+                {code: 'Digit2', normal: {eng: '2', mal: '2', finger: 'L4'}, shifted: {eng: '@', mal: '', finger: 'L4'}},
                 {code: 'Digit3', normal: {eng: '3', mal: '3', finger: 'L3'}, shifted: {eng: '#', mal: '്ര', finger: 'L3'}},
                 {code: 'Digit4', normal: {eng: '4', mal: '4', finger: 'L2'}, shifted: {eng: '$', mal: 'ർ', finger: 'L2'}},
                 {code: 'Digit5', normal: {eng: '5', mal: '5', finger: 'L2'}, shifted: {eng: '%', mal: 'ജ്ഞ', finger: 'L2'}},
@@ -210,8 +210,8 @@
                 {code: 'KeyO', normal: {eng: 'o', mal: 'ദ', finger: 'R4'}, shifted: {eng: 'O', mal: 'ധ', finger: 'R4'}},
                 {code: 'KeyP', normal: {eng: 'p', mal: 'ജ', finger: 'R5'}, shifted: {eng: 'P', mal: 'ഝ', finger: 'R5'}},
                 {code: 'BracketLeft', normal: {eng: '[', mal: 'ഡ', finger: 'R5'}, shifted: {eng: '{', mal: 'ഢ', finger: 'R5'}},
-                {code: 'BracketRight', normal: {eng: ']', mal: ']', finger: 'R5'}, shifted: {eng: '}', mal: 'ഞ', finger: 'R5'}},
-                {code: 'Backslash', normal: {eng: '\\', mal: '\\', finger: 'R5'}, shifted: {eng: '|', mal: '|', finger: 'R5'}}
+                {code: 'BracketRight', normal: {eng: ']', mal: '', finger: 'R5'}, shifted: {eng: '}', mal: 'ഞ', finger: 'R5'}},
+                {code: 'Backslash', normal: {eng: '\\', mal: 'ർ', finger: 'R5'}, shifted: {eng: '|', mal: '', finger: 'R5'}}
             ],
             [
                 {code: 'CapsLock', normal: {eng: 'Caps', mal: 'Caps', class: 'caps', finger: 'L5'}, shifted: {eng: 'Caps', mal: 'Caps', class: 'caps', finger: 'L5'}},
@@ -239,7 +239,7 @@
                 {code: 'KeyM', normal: {eng: 'm', mal: 'സ', finger: 'R2'}, shifted: {eng: 'M', mal: 'ശ', finger: 'R2'}},
                 {code: 'Comma', normal: {eng: ',', mal: ',', finger: 'R3'}, shifted: {eng: '<', mal: 'ഷ', finger: 'R3'}},
                 {code: 'Period', normal: {eng: '.', mal: '.', finger: 'R4'}, shifted: {eng: '>', mal: 'ൽ', finger: 'R4'}},
-                {code: 'Slash', normal: {eng: '/', mal: 'യ', finger: 'R5'}, shifted: {eng: '?', mal: 'ൾ', finger: 'R5'}},
+                {code: 'Slash', normal: {eng: '/', mal: 'യ', finger: 'R5'}, shifted: {eng: '?', mal: 'ൿ', finger: 'R5'}},
                 {code: 'ShiftRight', normal: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'R5'}, shifted: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'R5'}}
             ],
             [ {code: 'Space', normal: {eng: 'Space', mal: ' ', class: 'space', finger: 'R1'}, shifted: {eng: 'Space', mal: ' ', class: 'space', finger: 'R1'}} ]
@@ -258,8 +258,8 @@
                     if(key.normal.class) {
                         btn.innerHTML = `<span style="align-self:center; font-weight:bold; font-size:14px;">${key.normal.eng}</span>`;
                     } else {
-                        // Drawing the Keycap: English Top-Left, Malayalam Shifted Top-Right, Malayalam Normal Bottom-Right
-                        let malShift = key.shifted.mal !== key.normal.mal ? key.shifted.mal : '';
+                        // Displaying: Top-Left (English Shifted), Top-Right (Malayalam Shifted), Bottom-Right (Malayalam Normal)
+                        let malShift = key.shifted.mal;
                         let engTop = key.shifted.eng.toUpperCase();
                         btn.innerHTML = `
                             <span class="key-top-left">${engTop}</span>
@@ -344,8 +344,8 @@
                         else if (k.shifted.eng === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = !isCapsLockOn; }
                     } else {
                         // NORMAL = Bottom Malayalam Letter, SHIFTED = Top Malayalam Letter
-                        if (k.normal.mal === nextChar) { targetCode = k.code; fingerId = k.normal.finger; requiresShift = isCapsLockOn; } 
-                        else if (k.shifted.mal === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = !isCapsLockOn; }
+                        if (k.normal.mal === nextChar && k.normal.mal !== "") { targetCode = k.code; fingerId = k.normal.finger; requiresShift = isCapsLockOn; } 
+                        else if (k.shifted.mal === nextChar && k.shifted.mal !== "") { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = !isCapsLockOn; }
                     }
                 }));
             }
@@ -372,7 +372,7 @@
             if (code === 'Space') {
                 inputChar = ' ';
             } else {
-                // Caps Lock & Shift Logic Corrected
+                // Caps Lock & Shift Logic applying to BOTH English and Malayalam properly
                 let isShiftedState = isShiftPressed !== isCapsLockOn;
                 if (currentLang === 'EN') {
                     inputChar = isShiftedState ? activeKey.shifted.eng : activeKey.normal.eng;

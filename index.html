@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate QWERTY Typing Trainer - Malayalam & English</title>
+    <title>Aiswarya QWERTY Typing Trainer - Exact InScript Layout</title>
     <style>
         :root {
             --bg-color: #0f172a; --keyboard-bg: #1e293b; --key-bg: #334155;
@@ -11,7 +11,7 @@
             --error-color: #ef4444; --finger-glow: #22c55e;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        body { background-color: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 
         /* Dashboard View */
         .display-section {
@@ -29,16 +29,21 @@
 
         /* Full Keyboard Section */
         .keyboard-section { height: 48vh; background-color: var(--keyboard-bg); display: flex; justify-content: center; align-items: center; padding: 5px; border-top: 3px solid #334155; }
-        .keyboard { display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 1000px; background-color: #0f172a; padding: 10px; border-radius: 10px; }
+        .keyboard { display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 1050px; background-color: #0f172a; padding: 10px; border-radius: 10px; }
         .row { display: flex; justify-content: center; gap: 4px; width: 100%; }
-        .key { background-color: var(--key-bg); border: 1px solid #475569; border-radius: 5px; color: var(--text-color); height: 42px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 4px; cursor: pointer; user-select: none; }
-        .key .eng-label { font-size: 12px; font-weight: bold; }
-        .key .mal-label { font-size: 12px; color: #38bdf8; align-self: flex-end; font-weight: bold; }
+        
+        /* Key Styling mimicking the Reference Image */
+        .key { background-color: var(--key-bg); border: 1px solid #475569; border-radius: 5px; color: var(--text-color); height: 44px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 4px; cursor: pointer; user-select: none; position: relative; }
+        
+        /* Legends Layout exactly like the Image */
+        .key-top-left { position: absolute; top: 2px; left: 4px; font-size: 11px; font-weight: bold; color: #94a3b8; }
+        .key-top-right { position: absolute; top: 2px; right: 4px; font-size: 13px; font-weight: bold; color: #eab308; }
+        .key-bottom-right { position: absolute; bottom: 2px; right: 4px; font-size: 15px; font-weight: bold; color: #38bdf8; }
         
         .key.target-guide { background-color: #854d0e !important; border: 2px solid var(--target-glow); box-shadow: 0 0 12px var(--target-glow); animation: pulse 0.8s infinite alternate; }
         .key.active { background-color: var(--glow-color) !important; box-shadow: 0 0 15px var(--glow-color) !important; transform: scale(0.95); }
         .key.wrong-active { background-color: var(--error-color) !important; box-shadow: 0 0 15px var(--error-color) !important; }
-        .key.active .eng-label, .key.active .mal-label { color: #000 !important; }
+        .key.active .key-top-left, .key.active .key-top-right, .key.active .key-bottom-right { color: #000 !important; }
 
         .key.backspace { flex: 1.8; align-items: center; justify-content: center; }
         .key.tab { flex: 1.5; align-items: center; justify-content: center; }
@@ -55,6 +60,20 @@
         #L5, #R5 { height: 60px; } #L4, #R4 { height: 80px; } #L3, #R3 { height: 90px; } #L2, #R2 { height: 82px; } #L1, #R1 { height: 45px; border-radius: 15px; width: 36px; } 
 
         .finger-node.finger-blink { background-color: var(--finger-glow) !important; border-color: #4ade80 !important; box-shadow: 0 0 20px var(--finger-glow); transform: translateY(-8px); color: black !important; }
+
+        /* Aiswarya Signature Watermark */
+        .watermark {
+            position: absolute;
+            bottom: 20px;
+            right: 35px;
+            font-size: 32px;
+            font-weight: bold;
+            color: rgba(56, 189, 248, 0.25); /* Subtle transparent blue */
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            letter-spacing: 3px;
+            pointer-events: none; /* Prevents click issues */
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -62,14 +81,13 @@
     <div class="display-section">
         <div class="top-bar">
             <button class="btn-mode active" id="btn-en" onclick="setLanguage('EN')">ENGLISH</button>
-            <button class="btn-mode" id="btn-ml" onclick="setLanguage('ML')">മലയാളം</button>
+            <button class="btn-mode" id="btn-ml" onclick="setLanguage('ML')">മലയാളം (InScript)</button>
             <select class="selector" id="lessonSelect" onchange="loadLesson()">
-                <option value="1">Class 1: Home Row Focus</option>
-                <option value="2">Class 2: Top Row Reach</option>
-                <option value="3">Class 3: Bottom Row Reach</option>
-                <option value="4">Class 4: Capital & Shift Layout</option>
-                <option value="5">Class 5: Short Sentences</option>
-                <option value="6">Class 6: ചില്ലക്ഷരങ്ങൾ (ർ ൽ ൾ ൻ ൺ)</option>
+                <option value="1">Class 1: Home Row (Vowels & Consonants)</option>
+                <option value="2">Class 2: Top Row </option>
+                <option value="3">Class 3: Bottom Row </option>
+                <option value="4">Class 4: Word Practice</option>
+                <option value="5">Class 5: ചില്ലക്ഷരങ്ങൾ (ർ ൽ ൾ ൻ ൺ)</option>
             </select>
             <button class="btn-mode" style="background-color: #ef4444;" onclick="resetApp()">Reset</button>
         </div>
@@ -98,90 +116,87 @@
         </div>
     </div>
 
+    <!-- Aiswarya Name Watermark -->
+    <div class="watermark">Aiswarya</div>
+
     <script>
         let currentLang = 'EN'; let typedText = ''; let currentTargetText = ''; let isShiftPressed = false;
 
         const lessons = {
             EN: { 
                 1: ["asdf jkl; asdf jkl;"], 2: ["quiet row type pure"], 3: ["pack box zinc matrix"], 
-                4: ["Kerala India Malappuram"], 5: ["Practice builds great muscle memory."],
-                6: ["1 2 3 4 5 6 7 8 9 0", "! @ # $ % ^ & * ( )"]
+                4: ["Kerala India Malappuram"], 5: ["1 2 3 4 5 6 7 8 9 0"]
             },
             ML: { 
-                1: ["കഗങ ചജഞ"], 2: ["തഉഇഎ ഒഔ"], 3: ["ടഡണ തദധന"], 
-                4: ["ഖഘ ഛഝ ഠഢ ഥധ ഫഭ"], 5: ["കേരളം എൻ്റെ നാടാണ്"], 
-                6: ["അവർ മയിൽ അവൾ അവൻ കൺമണി", "മക്കൾ അർദ്ധരാത്രി പോയവൻ"] 
+                1: ["ോേ്ിു പതകചട"], 2: ["ൌൈാീൂ ഭങഘധഝ"], 3: ["െംനവലസ ,.യ"], 
+                4: ["കേരളം കമ്പ്യൂട്ടർ പരിശീലനം"], 
+                5: ["അവർ മയിൽ അവൾ അവൻ കൺമണി"] 
             }
         };
 
-        // Complete PC Keyboard with Number Row & Chillus (Shift + 3,4,5,6,7)
+        // Layout strictly matching the provided Image "Inscript-keyboard-malayalam.jpg"
         const pcKeyboardRows = [
-            // Row 1: Numbers & Chillus
             [
-                {code: 'Backquote', normal: {eng: '`', mal: 'ൊ', finger: 'L5'}, shifted: {eng: '~', mal: 'ഓ', finger: 'L5'}},
+                {code: 'Backquote', normal: {eng: '`', mal: 'ൊ', finger: 'L5'}, shifted: {eng: '~', mal: 'ഒ', finger: 'L5'}},
                 {code: 'Digit1', normal: {eng: '1', mal: '1', finger: 'L5'}, shifted: {eng: '!', mal: '!', finger: 'L5'}},
                 {code: 'Digit2', normal: {eng: '2', mal: '2', finger: 'L4'}, shifted: {eng: '@', mal: '@', finger: 'L4'}},
-                {code: 'Digit3', normal: {eng: '3', mal: '3', finger: 'L3'}, shifted: {eng: '#', mal: 'ർ', finger: 'L3'}},
-                {code: 'Digit4', normal: {eng: '4', mal: '4', finger: 'L2'}, shifted: {eng: '$', mal: 'ൽ', finger: 'L2'}},
-                {code: 'Digit5', normal: {eng: '5', mal: '5', finger: 'L2'}, shifted: {eng: '%', mal: 'ൾ', finger: 'L2'}},
-                {code: 'Digit6', normal: {eng: '6', mal: '6', finger: 'R2'}, shifted: {eng: '^', mal: 'ൺ', finger: 'R2'}},
-                {code: 'Digit7', normal: {eng: '7', mal: '7', finger: 'R2'}, shifted: {eng: '&', mal: 'ൻ', finger: 'R2'}},
-                {code: 'Digit8', normal: {eng: '8', mal: '8', finger: 'R3'}, shifted: {eng: '*', mal: 'ൿ', finger: 'R3'}},
-                {code: 'Digit9', normal: {eng: '9', mal: '9', finger: 'R4'}, shifted: {eng: '(', mal: '(', finger: 'R4'}},
-                {code: 'Digit0', normal: {eng: '0', mal: '0', finger: 'R5'}, shifted: {eng: ')', mal: ')', finger: 'R5'}},
+                {code: 'Digit3', normal: {eng: '3', mal: '3', finger: 'L3'}, shifted: {eng: '#', mal: '്ര', finger: 'L3'}},
+                {code: 'Digit4', normal: {eng: '4', mal: '4', finger: 'L2'}, shifted: {eng: '$', mal: 'ർ', finger: 'L2'}},
+                {code: 'Digit5', normal: {eng: '5', mal: '5', finger: 'L2'}, shifted: {eng: '%', mal: 'ജ്ഞ', finger: 'L2'}},
+                {code: 'Digit6', normal: {eng: '6', mal: '6', finger: 'R2'}, shifted: {eng: '^', mal: 'ത്ര', finger: 'R2'}},
+                {code: 'Digit7', normal: {eng: '7', mal: '7', finger: 'R2'}, shifted: {eng: '&', mal: 'ക്ഷ', finger: 'R2'}},
+                {code: 'Digit8', normal: {eng: '8', mal: '8', finger: 'R3'}, shifted: {eng: '*', mal: 'ശ്ര', finger: 'R3'}},
+                {code: 'Digit9', normal: {eng: '9', mal: '9', finger: 'R4'}, shifted: {eng: '(', mal: 'ൺ', finger: 'R4'}},
+                {code: 'Digit0', normal: {eng: '0', mal: '0', finger: 'R5'}, shifted: {eng: ')', mal: 'ൾ', finger: 'R5'}},
                 {code: 'Minus', normal: {eng: '-', mal: '-', finger: 'R5'}, shifted: {eng: '_', mal: 'ഃ', finger: 'R5'}},
-                {code: 'Equal', normal: {eng: '=', mal: '=', finger: 'R5'}, shifted: {eng: '+', mal: 'ൃ', finger: 'R5'}},
+                {code: 'Equal', normal: {eng: '=', mal: 'ൃ', finger: 'R5'}, shifted: {eng: '+', mal: 'ഋ', finger: 'R5'}},
                 {code: 'Backspace', normal: {eng: 'Bksp', mal: '←', class: 'backspace', finger: 'R5'}, shifted: {eng: 'Bksp', mal: '←', class: 'backspace', finger: 'R5'}}
             ],
-            // Row 2
             [
                 {code: 'Tab', normal: {eng: 'Tab', mal: 'Tab', class: 'tab', finger: 'L5'}, shifted: {eng: 'Tab', mal: 'Tab', class: 'tab', finger: 'L5'}},
-                {code: 'KeyQ', normal: {eng: 'q', mal: 'ഞ', finger: 'L5'}, shifted: {eng: 'Q', mal: 'ഔ', finger: 'L5'}},
-                {code: 'KeyW', normal: {eng: 'w', mal: 'ത', finger: 'L4'}, shifted: {eng: 'W', mal: 'ഐ', finger: 'L4'}},
-                {code: 'KeyE', normal: {eng: 'e', mal: 'ഭ', finger: 'L3'}, shifted: {eng: 'E', mal: 'ആ', finger: 'L3'}},
-                {code: 'KeyR', normal: {eng: 'r', mal: 'ര', finger: 'L2'}, shifted: {eng: 'R', mal: 'ഈ', finger: 'L2'}},
-                {code: 'KeyT', normal: {eng: 't', mal: 'സ', finger: 'L2'}, shifted: {eng: 'T', mal: 'ഊ', finger: 'L2'}},
-                {code: 'KeyY', normal: {eng: 'y', mal: 'ഉ', finger: 'R2'}, shifted: {eng: 'Y', mal: 'ള', finger: 'R2'}},
-                {code: 'KeyU', normal: {eng: 'u', mal: 'ഇ', finger: 'R2'}, shifted: {eng: 'U', mal: 'ങ', finger: 'R2'}},
-                {code: 'KeyI', normal: {eng: 'i', mal: 'എ', finger: 'R3'}, shifted: {eng: 'I', mal: 'ഘ', finger: 'R3'}},
-                {code: 'KeyO', normal: {eng: 'o', mal: 'ഒ', finger: 'R4'}, shifted: {eng: 'O', mal: 'ധ', finger: 'R4'}},
-                {code: 'KeyP', normal: {eng: 'p', mal: 'പ', finger: 'R5'}, shifted: {eng: 'P', mal: 'ഝ', finger: 'R5'}},
+                {code: 'KeyQ', normal: {eng: 'q', mal: 'ൌ', finger: 'L5'}, shifted: {eng: 'Q', mal: 'ഔ', finger: 'L5'}},
+                {code: 'KeyW', normal: {eng: 'w', mal: 'ൈ', finger: 'L4'}, shifted: {eng: 'W', mal: 'ഐ', finger: 'L4'}},
+                {code: 'KeyE', normal: {eng: 'e', mal: 'ാ', finger: 'L3'}, shifted: {eng: 'E', mal: 'ആ', finger: 'L3'}},
+                {code: 'KeyR', normal: {eng: 'r', mal: 'ീ', finger: 'L2'}, shifted: {eng: 'R', mal: 'ഈ', finger: 'L2'}},
+                {code: 'KeyT', normal: {eng: 't', mal: 'ൂ', finger: 'L2'}, shifted: {eng: 'T', mal: 'ഊ', finger: 'L2'}},
+                {code: 'KeyY', normal: {eng: 'y', mal: 'ബ', finger: 'R2'}, shifted: {eng: 'Y', mal: 'ഭ', finger: 'R2'}},
+                {code: 'KeyU', normal: {eng: 'u', mal: 'ഹ', finger: 'R2'}, shifted: {eng: 'U', mal: 'ങ', finger: 'R2'}},
+                {code: 'KeyI', normal: {eng: 'i', mal: 'ഗ', finger: 'R3'}, shifted: {eng: 'I', mal: 'ഘ', finger: 'R3'}},
+                {code: 'KeyO', normal: {eng: 'o', mal: 'ദ', finger: 'R4'}, shifted: {eng: 'O', mal: 'ധ', finger: 'R4'}},
+                {code: 'KeyP', normal: {eng: 'p', mal: 'ജ', finger: 'R5'}, shifted: {eng: 'P', mal: 'ഝ', finger: 'R5'}},
                 {code: 'BracketLeft', normal: {eng: '[', mal: 'ഡ', finger: 'R5'}, shifted: {eng: '{', mal: 'ഢ', finger: 'R5'}},
-                {code: 'BracketRight', normal: {eng: ']', mal: 'ഏ', finger: 'R5'}, shifted: {eng: '}', mal: 'ഞ', finger: 'R5'}},
-                {code: 'Backslash', normal: {eng: '\\', mal: 'ാ', finger: 'R5'}, shifted: {eng: '|', mal: 'ഓ', finger: 'R5'}}
+                {code: 'BracketRight', normal: {eng: ']', mal: 'ഞ', finger: 'R5'}, shifted: {eng: '}', mal: 'ഞ', finger: 'R5'}},
+                {code: 'Backslash', normal: {eng: '\\', mal: '\\', finger: 'R5'}, shifted: {eng: '|', mal: '|', finger: 'R5'}}
             ],
-            // Row 3
             [
                 {code: 'CapsLock', normal: {eng: 'Caps', mal: 'Caps', class: 'caps', finger: 'L5'}, shifted: {eng: 'Caps', mal: 'Caps', class: 'caps', finger: 'L5'}},
-                {code: 'KeyA', normal: {eng: 'a', mal: 'ക', finger: 'L5'}, shifted: {eng: 'A', mal: 'ഓ', finger: 'L5'}},
-                {code: 'KeyS', normal: {eng: 's', mal: 'ഖ', finger: 'L4'}, shifted: {eng: 'S', mal: 'ഏ', finger: 'L4'}},
-                {code: 'KeyD', normal: {eng: 'd', mal: 'ഗ', finger: 'L3'}, shifted: {eng: 'D', mal: 'അ', finger: 'L3'}},
-                {code: 'KeyF', normal: {eng: 'f', mal: 'ഘ', finger: 'L2'}, shifted: {eng: 'F', mal: 'ഇ', finger: 'L2'}},
-                {code: 'KeyG', normal: {eng: 'g', mal: 'ങ', finger: 'L2'}, shifted: {eng: 'G', mal: 'ഉ', finger: 'L2'}},
-                {code: 'KeyH', normal: {eng: 'h', mal: 'ച', finger: 'R2'}, shifted: {eng: 'H', mal: 'ഫ', finger: 'R2'}},
-                {code: 'KeyJ', normal: {eng: 'j', mal: 'ഛ', finger: 'R2'}, shifted: {eng: 'J', mal: 'റ', finger: 'R2'}},
-                {code: 'KeyK', normal: {eng: 'k', mal: 'ജ', finger: 'R3'}, shifted: {eng: 'K', mal: 'ഖ', finger: 'R3'}},
-                {code: 'KeyL', normal: {eng: 'l', mal: 'ഝ', finger: 'R4'}, shifted: {eng: 'L', mal: 'ഴ', finger: 'R4'}},
-                {code: 'Semicolon', normal: {eng: ';', mal: 'യ', finger: 'R5'}, shifted: {eng: ':', mal: 'ഛ', finger: 'R5'}},
+                {code: 'KeyA', normal: {eng: 'a', mal: 'ോ', finger: 'L5'}, shifted: {eng: 'A', mal: 'ഓ', finger: 'L5'}},
+                {code: 'KeyS', normal: {eng: 's', mal: 'േ', finger: 'L4'}, shifted: {eng: 'S', mal: 'ഏ', finger: 'L4'}},
+                {code: 'KeyD', normal: {eng: 'd', mal: '്', finger: 'L3'}, shifted: {eng: 'D', mal: 'അ', finger: 'L3'}},
+                {code: 'KeyF', normal: {eng: 'f', mal: 'ി', finger: 'L2'}, shifted: {eng: 'F', mal: 'ഇ', finger: 'L2'}},
+                {code: 'KeyG', normal: {eng: 'g', mal: 'ു', finger: 'L2'}, shifted: {eng: 'G', mal: 'ഉ', finger: 'L2'}},
+                {code: 'KeyH', normal: {eng: 'h', mal: 'പ', finger: 'R2'}, shifted: {eng: 'H', mal: 'ഫ', finger: 'R2'}},
+                {code: 'KeyJ', normal: {eng: 'j', mal: 'ര', finger: 'R2'}, shifted: {eng: 'J', mal: 'റ', finger: 'R2'}},
+                {code: 'KeyK', normal: {eng: 'k', mal: 'ക', finger: 'R3'}, shifted: {eng: 'K', mal: 'ഖ', finger: 'R3'}},
+                {code: 'KeyL', normal: {eng: 'l', mal: 'ത', finger: 'R4'}, shifted: {eng: 'L', mal: 'ഥ', finger: 'R4'}},
+                {code: 'Semicolon', normal: {eng: ';', mal: 'ച', finger: 'R5'}, shifted: {eng: ':', mal: 'ഛ', finger: 'R5'}},
                 {code: 'Quote', normal: {eng: "'", mal: 'ട', finger: 'R5'}, shifted: {eng: '"', mal: 'ഠ', finger: 'R5'}},
                 {code: 'Enter', normal: {eng: 'Enter', mal: '↵', class: 'enter', finger: 'R5'}, shifted: {eng: 'Enter', mal: '↵', class: 'enter', finger: 'R5'}}
             ],
-            // Row 4
             [
                 {code: 'ShiftLeft', normal: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'L5'}, shifted: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'L5'}},
-                {code: 'KeyZ', normal: {eng: 'z', mal: 'ട', finger: 'L5'}, shifted: {eng: 'Z', mal: 'എ', finger: 'L5'}},
-                {code: 'KeyX', normal: {eng: 'x', mal: 'ഠ', finger: 'L4'}, shifted: {eng: 'X', mal: 'ഒ', finger: 'L4'}},
-                {code: 'KeyC', normal: {eng: 'c', mal: 'ഡ', finger: 'L3'}, shifted: {eng: 'C', mal: 'ണ', finger: 'L3'}},
-                {code: 'KeyV', normal: {eng: 'v', mal: 'ഢ', finger: 'L2'}, shifted: {eng: 'V', mal: 'ഠ', finger: 'L2'}},
-                {code: 'KeyB', normal: {eng: 'b', mal: 'ണ', finger: 'L2'}, shifted: {eng: 'B', mal: 'ല', finger: 'L2'}},
-                {code: 'KeyN', normal: {eng: 'n', mal: 'ത', finger: 'R2'}, shifted: {eng: 'N', mal: 'ള', finger: 'R2'}},
-                {code: 'KeyM', normal: {eng: 'm', mal: 'ഥ', finger: 'R2'}, shifted: {eng: 'M', mal: 'ശ', finger: 'R2'}},
-                {code: 'Comma', normal: {eng: ',', mal: 'ദ', finger: 'R3'}, shifted: {eng: '<', mal: 'ഷ', finger: 'R3'}},
-                {code: 'Period', normal: {eng: '.', mal: 'ധ', finger: 'R4'}, shifted: {eng: '>', mal: 'സ', finger: 'R4'}},
-                {code: 'Slash', normal: {eng: '/', mal: 'ന', finger: 'R5'}, shifted: {eng: '?', mal: 'ഹ', finger: 'R5'}},
+                {code: 'KeyZ', normal: {eng: 'z', mal: 'െ', finger: 'L5'}, shifted: {eng: 'Z', mal: 'എ', finger: 'L5'}},
+                {code: 'KeyX', normal: {eng: 'x', mal: 'ം', finger: 'L4'}, shifted: {eng: 'X', mal: 'ം', finger: 'L4'}},
+                {code: 'KeyC', normal: {eng: 'c', mal: 'മ', finger: 'L3'}, shifted: {eng: 'C', mal: 'ണ', finger: 'L3'}},
+                {code: 'KeyV', normal: {eng: 'v', mal: 'ന', finger: 'L2'}, shifted: {eng: 'V', mal: 'ന', finger: 'L2'}},
+                {code: 'KeyB', normal: {eng: 'b', mal: 'വ', finger: 'L2'}, shifted: {eng: 'B', mal: 'ഴ', finger: 'L2'}},
+                {code: 'KeyN', normal: {eng: 'n', mal: 'ല', finger: 'R2'}, shifted: {eng: 'N', mal: 'ള', finger: 'R2'}},
+                {code: 'KeyM', normal: {eng: 'm', mal: 'സ', finger: 'R2'}, shifted: {eng: 'M', mal: 'ശ', finger: 'R2'}},
+                {code: 'Comma', normal: {eng: ',', mal: ',', finger: 'R3'}, shifted: {eng: '<', mal: 'ഷ', finger: 'R3'}},
+                {code: 'Period', normal: {eng: '.', mal: '.', finger: 'R4'}, shifted: {eng: '>', mal: '।', finger: 'R4'}},
+                {code: 'Slash', normal: {eng: '/', mal: 'യ', finger: 'R5'}, shifted: {eng: '?', mal: '?', finger: 'R5'}},
                 {code: 'ShiftRight', normal: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'R5'}, shifted: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'R5'}}
             ],
-            // Row 5
             [ {code: 'Space', normal: {eng: 'Space', mal: ' ', class: 'space', finger: 'R1'}, shifted: {eng: 'Space', mal: ' ', class: 'space', finger: 'R1'}} ]
         ];
 
@@ -193,7 +208,21 @@
                     const btn = document.createElement('button'); 
                     let state = isShiftPressed ? key.shifted : key.normal;
                     btn.className = `key ${state.class || ''}`; btn.id = key.code;
-                    btn.innerHTML = state.class ? `<span class="eng-label" style="align-self:center;">${state.eng}</span>` : `<span class="eng-label">${state.eng}</span><span class="mal-label">${state.mal}</span>`;
+                    
+                    if(state.class) {
+                        btn.innerHTML = `<span style="align-self:center; font-weight:bold; font-size:14px;">${state.eng}</span>`;
+                    } else {
+                        // Drawing legends exactly like the referenced image
+                        let malShift = key.shifted.mal !== key.normal.mal ? key.shifted.mal : '';
+                        let engTop = key.shifted.eng.toUpperCase();
+                        
+                        btn.innerHTML = `
+                            <span class="key-top-left">${engTop}</span>
+                            <span class="key-top-right">${malShift}</span>
+                            <span class="key-bottom-right">${key.normal.mal}</span>
+                        `;
+                    }
+                    
                     btn.onclick = () => triggerKey(key.code);
                     rowDiv.appendChild(btn);
                 });
@@ -211,7 +240,7 @@
         function updateTargetUI() {
             const box = document.getElementById('targetBox'); let progress = typedText.length;
             if (progress >= currentTargetText.length) {
-                box.innerHTML = `<span style='color:#22c55e; font-weight:bold;'>Superb! Next line...</span>`;
+                box.innerHTML = `<span style='color:#22c55e; font-weight:bold;'>Superb! Next...</span>`;
                 setTimeout(loadLesson, 1200); return;
             }
             let typedPart = currentTargetText.substring(0, progress); let nextChar = currentTargetText.charAt(progress); let remaining = currentTargetText.substring(progress + 1);

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aiswarya Pro Typing Tutor (Custom Shift Logic)</title>
+    <title>Aiswarya Pro Typing Tutor (Google InScript Edition)</title>
     <style>
         :root {
             --bg-color: #0f172a; --keyboard-bg: #1e293b; --key-bg: #334155;
             --text-color: #f8fafc; --glow-color: #38bdf8; --target-glow: #eab308; 
-            --error-color: #ef4444; --finger-glow: #22c55e;
+            --error-color: #ef4444; --finger-glow: #4ade80;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); height: 100vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
@@ -57,9 +57,11 @@
         .row { display: flex; justify-content: center; gap: 4px; width: 100%; }
         
         .key { background-color: var(--key-bg); border: 1px solid #475569; border-radius: 5px; color: var(--text-color); height: 42px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 4px; cursor: pointer; user-select: none; position: relative; transition: all 0.1s; }
+        
+        /* Legends properly positioned based on image */
         .key-top-left { position: absolute; top: 2px; left: 4px; font-size: 11px; font-weight: bold; color: #94a3b8; }
-        .key-top-right { position: absolute; top: 2px; right: 4px; font-size: 13px; font-weight: bold; color: #eab308; }
-        .key-bottom-right { position: absolute; bottom: 2px; right: 4px; font-size: 15px; font-weight: bold; color: #38bdf8; }
+        .key-top-right { position: absolute; top: 2px; right: 4px; font-size: 13px; font-weight: bold; color: #eab308; } /* Shift / Top */
+        .key-bottom-right { position: absolute; bottom: 2px; right: 4px; font-size: 15px; font-weight: bold; color: #38bdf8; } /* Normal / Bottom */
         
         .key.target-guide { background-color: #854d0e !important; border: 2px solid var(--target-glow); box-shadow: 0 0 12px var(--target-glow); animation: target-pulse 0.8s infinite alternate; }
         .key.active { background-color: var(--glow-color) !important; box-shadow: 0 0 15px var(--glow-color) !important; transform: scale(0.95); }
@@ -71,15 +73,15 @@
         .key.enter { flex: 2.2; } .key.shift { flex: 2.5; } .key.space { flex: 8; }
         .key.backspace, .key.tab, .key.caps, .key.enter, .key.shift, .key.space { align-items: center; justify-content: center; }
 
-        /* Left & Right Hand Positioning */
+        /* Left & Right Hand Positioning - Split to edges */
         .hands-section-wrapper {
             background-color: #0f172a; border-top: 2px solid #1e293b; height: 18vh;
             display: flex; justify-content: center; width: 100%;
         }
         .hands-container-layout {
-            display: flex; justify-content: space-between; /* Pushes hands to left and right */
-            align-items: center; width: 100%; max-width: 1050px; /* Same as keyboard width */
-            padding: 5px 60px; /* Spacing from edges */
+            display: flex; justify-content: space-between; /* Keeps hands on extreme left and right */
+            align-items: center; width: 100%; max-width: 1050px; 
+            padding: 5px 40px; 
         }
         
         .hand-container { display: flex; gap: 12px; align-items: flex-end; }
@@ -99,14 +101,14 @@
         <div class="top-controls">
             <div class="lang-selectors">
                 <button class="btn-mode active" id="btn-en" onclick="setLanguage('EN')">ENGLISH</button>
-                <button class="btn-mode" id="btn-ml" onclick="setLanguage('ML')">മലയാളം (Custom Shift)</button>
+                <button class="btn-mode" id="btn-ml" onclick="setLanguage('ML')">മലയാളം (InScript)</button>
             </div>
             <select class="selector" id="lessonSelect" onchange="loadLesson()">
-                <option value="1">Lesson 1: Top & Bottom Toggle</option>
-                <option value="2">Lesson 2: Top Row Words</option>
-                <option value="3">Lesson 3: Bottom Row Words</option>
-                <option value="4">Lesson 4: Capital & Shift Flow</option>
-                <option value="5">Lesson 5: Sentences & Speed Test</option>
+                <option value="1">Lesson 1: Normal Base (Bottom Letters)</option>
+                <option value="2">Lesson 2: Shift Focus (Top Letters)</option>
+                <option value="3">Lesson 3: Mixed Practice</option>
+                <option value="4">Lesson 4: Capital Letters & Flow</option>
+                <option value="5">Lesson 5: Google InScript Chillus</option>
             </select>
             <button class="btn-mode" style="background-color: #ef4444;" onclick="resetApp()">Restart Lesson</button>
         </div>
@@ -132,7 +134,7 @@
     <!-- Separated Hands Layout -->
     <div class="hands-section-wrapper">
         <div class="hands-container-layout">
-            <!-- Left Hand -->
+            <!-- Left Hand (Left Edge) -->
             <div class="hand-container">
                 <div class="finger-node" id="L5"><span>P</span></div>
                 <div class="finger-node" id="L4"><span>R</span></div>
@@ -140,7 +142,7 @@
                 <div class="finger-node" id="L2"><span>I</span></div>
                 <div class="finger-node" id="L1"><span>T</span></div>
             </div>
-            <!-- Right Hand -->
+            <!-- Right Hand (Right Edge) -->
             <div class="hand-container">
                 <div class="finger-node" id="R1"><span>T</span></div>
                 <div class="finger-node" id="R2"><span>I</span></div>
@@ -162,17 +164,22 @@
 
         const lessons = {
             EN: { 
-                1: ["aA sS dD fF jJ kK lL ;:"], 2: ["Quiet Row Type Pure Layout Write"], 
-                3: ["Pack my box with five dozen zinc matrix"], 4: ["Kerala India Malappuram Wandoor Nilambur"], 
+                1: ["a s d f j k l ;", "q w e r t y u i o p"], 
+                2: ["A S D F J K L :", "Q W E R T Y U I O P"], 
+                3: ["Pack my box with five dozen zinc matrix"], 
+                4: ["Kerala India Malappuram Wandoor Nilambur"], 
                 5: ["Typing study style brings a professional dashboard to track your speed."]
             },
             ML: { 
-                1: ["അാ ആാ ഇീ ഈീ ഉൂ ഊൂ"], 2: ["കഖ ഗഘ ങഹ ചഛ ജഝ"], 
-                3: ["പഫ ബഭ തഥ ദധ നണ"], 4: ["കേരളം എൻ്റെ മാതൃനാടാണ്"], 
-                5: ["ഈ പുതിയ രീതിയിൽ ഷിഫ്റ്റ് അമർത്തുമ്പോൾ താഴെയുള്ള അക്ഷരങ്ങൾ ലഭിക്കും."]
+                1: ["ോ േ ് ി ു പ ര ക ത ച ട", "െ ം മ ന വ ല സ , . യ"], 
+                2: ["ഓ ഏ അ ഇ ഉ ഫ റ ഖ ഥ ഛ ഠ", "എ ൺ ണ ൻ ഴ ള ശ ഷ ൽ ൾ"], 
+                3: ["കേരളം കമ്പ്യൂട്ടർ പരിശീലനം"], 
+                4: ["അവർ മയിൽ അവൾ അവൻ കൺമണി"], 
+                5: ["ർ ൽ ൾ ൻ ൺ ജ്ഞ ത്ര ക്ഷ ശ്ര"]
             }
         };
 
+        // Exact mapping from Google InScript screenshots provided
         const pcKeyboardRows = [
             [
                 {code: 'Backquote', normal: {eng: '`', mal: 'ൊ', finger: 'L5'}, shifted: {eng: '~', mal: 'ഒ', finger: 'L5'}},
@@ -184,8 +191,8 @@
                 {code: 'Digit6', normal: {eng: '6', mal: '6', finger: 'R2'}, shifted: {eng: '^', mal: 'ത്ര', finger: 'R2'}},
                 {code: 'Digit7', normal: {eng: '7', mal: '7', finger: 'R2'}, shifted: {eng: '&', mal: 'ക്ഷ', finger: 'R2'}},
                 {code: 'Digit8', normal: {eng: '8', mal: '8', finger: 'R3'}, shifted: {eng: '*', mal: 'ശ്ര', finger: 'R3'}},
-                {code: 'Digit9', normal: {eng: '9', mal: '9', finger: 'R4'}, shifted: {eng: '(', mal: 'ൺ', finger: 'R4'}},
-                {code: 'Digit0', normal: {eng: '0', mal: '0', finger: 'R5'}, shifted: {eng: ')', mal: 'ൾ', finger: 'R5'}},
+                {code: 'Digit9', normal: {eng: '9', mal: '9', finger: 'R4'}, shifted: {eng: '(', mal: '(', finger: 'R4'}},
+                {code: 'Digit0', normal: {eng: '0', mal: '0', finger: 'R5'}, shifted: {eng: ')', mal: ')', finger: 'R5'}},
                 {code: 'Minus', normal: {eng: '-', mal: '-', finger: 'R5'}, shifted: {eng: '_', mal: 'ഃ', finger: 'R5'}},
                 {code: 'Equal', normal: {eng: '=', mal: 'ൃ', finger: 'R5'}, shifted: {eng: '+', mal: 'ഋ', finger: 'R5'}},
                 {code: 'Backspace', normal: {eng: 'Bksp', mal: '←', class: 'backspace', finger: 'R5'}, shifted: {eng: 'Bksp', mal: '←', class: 'backspace', finger: 'R5'}}
@@ -203,7 +210,7 @@
                 {code: 'KeyO', normal: {eng: 'o', mal: 'ദ', finger: 'R4'}, shifted: {eng: 'O', mal: 'ധ', finger: 'R4'}},
                 {code: 'KeyP', normal: {eng: 'p', mal: 'ജ', finger: 'R5'}, shifted: {eng: 'P', mal: 'ഝ', finger: 'R5'}},
                 {code: 'BracketLeft', normal: {eng: '[', mal: 'ഡ', finger: 'R5'}, shifted: {eng: '{', mal: 'ഢ', finger: 'R5'}},
-                {code: 'BracketRight', normal: {eng: ']', mal: 'ഞ', finger: 'R5'}, shifted: {eng: '}', mal: 'ഞ', finger: 'R5'}},
+                {code: 'BracketRight', normal: {eng: ']', mal: ']', finger: 'R5'}, shifted: {eng: '}', mal: 'ഞ', finger: 'R5'}},
                 {code: 'Backslash', normal: {eng: '\\', mal: '\\', finger: 'R5'}, shifted: {eng: '|', mal: '|', finger: 'R5'}}
             ],
             [
@@ -224,15 +231,15 @@
             [
                 {code: 'ShiftLeft', normal: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'L5'}, shifted: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'L5'}},
                 {code: 'KeyZ', normal: {eng: 'z', mal: 'െ', finger: 'L5'}, shifted: {eng: 'Z', mal: 'എ', finger: 'L5'}},
-                {code: 'KeyX', normal: {eng: 'x', mal: 'ം', finger: 'L4'}, shifted: {eng: 'X', mal: 'ം', finger: 'L4'}},
+                {code: 'KeyX', normal: {eng: 'x', mal: 'ം', finger: 'L4'}, shifted: {eng: 'X', mal: 'ൺ', finger: 'L4'}},
                 {code: 'KeyC', normal: {eng: 'c', mal: 'മ', finger: 'L3'}, shifted: {eng: 'C', mal: 'ണ', finger: 'L3'}},
-                {code: 'KeyV', normal: {eng: 'v', mal: 'ന', finger: 'L2'}, shifted: {eng: 'V', mal: 'ന', finger: 'L2'}},
+                {code: 'KeyV', normal: {eng: 'v', mal: 'ന', finger: 'L2'}, shifted: {eng: 'V', mal: 'ൻ', finger: 'L2'}},
                 {code: 'KeyB', normal: {eng: 'b', mal: 'വ', finger: 'L2'}, shifted: {eng: 'B', mal: 'ഴ', finger: 'L2'}},
                 {code: 'KeyN', normal: {eng: 'n', mal: 'ല', finger: 'R2'}, shifted: {eng: 'N', mal: 'ള', finger: 'R2'}},
                 {code: 'KeyM', normal: {eng: 'm', mal: 'സ', finger: 'R2'}, shifted: {eng: 'M', mal: 'ശ', finger: 'R2'}},
                 {code: 'Comma', normal: {eng: ',', mal: ',', finger: 'R3'}, shifted: {eng: '<', mal: 'ഷ', finger: 'R3'}},
-                {code: 'Period', normal: {eng: '.', mal: '.', finger: 'R4'}, shifted: {eng: '>', mal: '।', finger: 'R4'}},
-                {code: 'Slash', normal: {eng: '/', mal: 'യ', finger: 'R5'}, shifted: {eng: '?', mal: '?', finger: 'R5'}},
+                {code: 'Period', normal: {eng: '.', mal: '.', finger: 'R4'}, shifted: {eng: '>', mal: 'ൽ', finger: 'R4'}},
+                {code: 'Slash', normal: {eng: '/', mal: 'യ', finger: 'R5'}, shifted: {eng: '?', mal: 'ൾ', finger: 'R5'}},
                 {code: 'ShiftRight', normal: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'R5'}, shifted: {eng: 'Shift', mal: 'Shift', class: 'shift', finger: 'R5'}}
             ],
             [ {code: 'Space', normal: {eng: 'Space', mal: ' ', class: 'space', finger: 'R1'}, shifted: {eng: 'Space', mal: ' ', class: 'space', finger: 'R1'}} ]
@@ -251,6 +258,7 @@
                     if(key.normal.class) {
                         btn.innerHTML = `<span style="align-self:center; font-weight:bold; font-size:14px;">${key.normal.eng}</span>`;
                     } else {
+                        // Drawing the Keycap: English Top-Left, Malayalam Shifted Top-Right, Malayalam Normal Bottom-Right
                         let malShift = key.shifted.mal !== key.normal.mal ? key.shifted.mal : '';
                         let engTop = key.shifted.eng.toUpperCase();
                         btn.innerHTML = `
@@ -322,20 +330,22 @@
 
             board.innerHTML = `<span class="text-typed">${typedPart}</span><span class="${nextCharClass}">${nextCharDisplay}</span><span class="text-remaining">${remaining}</span>`;
 
+            // Reset guidance
             document.querySelectorAll('.key').forEach(k => k.classList.remove('target-guide'));
             document.querySelectorAll('.finger-node').forEach(f => f.classList.remove('finger-blink'));
 
             let targetCode = '', fingerId = '', requiresShift = false;
-            if (nextChar === ' ') { targetCode = 'Space'; fingerId = 'R1'; }
-            else {
+            if (nextChar === ' ') { 
+                targetCode = 'Space'; fingerId = 'R1'; 
+            } else {
                 pcKeyboardRows.forEach(row => row.forEach(k => {
                     if (currentLang === 'EN') {
                         if (k.normal.eng === nextChar) { targetCode = k.code; fingerId = k.normal.finger; requiresShift = isCapsLockOn; } 
                         else if (k.shifted.eng === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = !isCapsLockOn; }
                     } else {
-                        // INVERTED LOGIC FOR MALAYALAM AS REQUESTED
-                        if (k.shifted.mal === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = isCapsLockOn; } // Top Letter
-                        else if (k.normal.mal === nextChar) { targetCode = k.code; fingerId = k.normal.finger; requiresShift = !isCapsLockOn; } // Bottom Letter
+                        // NORMAL = Bottom Malayalam Letter, SHIFTED = Top Malayalam Letter
+                        if (k.normal.mal === nextChar) { targetCode = k.code; fingerId = k.normal.finger; requiresShift = isCapsLockOn; } 
+                        else if (k.shifted.mal === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = !isCapsLockOn; }
                     }
                 }));
             }
@@ -362,12 +372,12 @@
             if (code === 'Space') {
                 inputChar = ' ';
             } else {
+                // Caps Lock & Shift Logic Corrected
                 let isShiftedState = isShiftPressed !== isCapsLockOn;
                 if (currentLang === 'EN') {
                     inputChar = isShiftedState ? activeKey.shifted.eng : activeKey.normal.eng;
                 } else {
-                    // INVERTED LOGIC FOR MALAYALAM AS REQUESTED
-                    inputChar = isShiftedState ? activeKey.normal.mal : activeKey.shifted.mal;
+                    inputChar = isShiftedState ? activeKey.shifted.mal : activeKey.normal.mal;
                 }
             }
 

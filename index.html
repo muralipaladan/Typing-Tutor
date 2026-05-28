@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aiswarya Pro Typing Tutor (TypingStudy Style)</title>
+    <title>Aiswarya Pro Typing Tutor (Custom Shift Logic)</title>
     <style>
         :root {
             --bg-color: #0f172a; --keyboard-bg: #1e293b; --key-bg: #334155;
@@ -33,35 +33,30 @@
         .stat-box.error span { color: var(--error-color); }
         .stat-box.acc span { color: #4ade80; }
 
-        /* TypingStudy Style Text Board */
-        .text-board-container {
-            flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 15px;
-        }
+        /* Text Board */
+        .text-board-container { flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 15px; }
         .text-board {
             background-color: #1e293b; width: 90%; max-width: 1000px; padding: 25px 35px;
             border-radius: 12px; font-size: 32px; letter-spacing: 2px; line-height: 1.6;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5); border: 1px solid #475569;
-            user-select: none;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5); border: 1px solid #475569; user-select: none;
         }
         
-        /* Text Highlighting Rules */
-        .text-typed { color: #4ade80; opacity: 0.8; } /* Green for typed */
+        .text-typed { color: #4ade80; opacity: 0.8; } 
         .text-current { 
             background-color: var(--glow-color); color: #000; font-weight: bold; 
             border-radius: 4px; padding: 0 2px; box-shadow: 0 0 10px var(--glow-color);
             animation: cursor-blink 1s infinite alternate;
         }
-        .text-current.space { min-width: 15px; display: inline-block; } /* Spacebar highlight */
+        .text-current.space { min-width: 15px; display: inline-block; } 
         .text-remaining { color: #94a3b8; }
-        
         @keyframes cursor-blink { 0% { opacity: 0.8; } 100% { opacity: 1; } }
 
-        /* Keyboard Section */
-        .keyboard-section { height: 42vh; background-color: var(--keyboard-bg); display: flex; justify-content: center; align-items: center; padding: 5px; border-top: 3px solid #334155; }
+        /* Keyboard Layout */
+        .keyboard-section { height: 40vh; background-color: var(--keyboard-bg); display: flex; justify-content: center; align-items: center; padding: 5px; border-top: 3px solid #334155; }
         .keyboard { display: flex; flex-direction: column; gap: 4px; width: 100%; max-width: 1050px; background-color: #0f172a; padding: 10px; border-radius: 10px; }
         .row { display: flex; justify-content: center; gap: 4px; width: 100%; }
         
-        .key { background-color: var(--key-bg); border: 1px solid #475569; border-radius: 5px; color: var(--text-color); height: 44px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 4px; cursor: pointer; user-select: none; position: relative; transition: all 0.1s; }
+        .key { background-color: var(--key-bg); border: 1px solid #475569; border-radius: 5px; color: var(--text-color); height: 42px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 2px 4px; cursor: pointer; user-select: none; position: relative; transition: all 0.1s; }
         .key-top-left { position: absolute; top: 2px; left: 4px; font-size: 11px; font-weight: bold; color: #94a3b8; }
         .key-top-right { position: absolute; top: 2px; right: 4px; font-size: 13px; font-weight: bold; color: #eab308; }
         .key-bottom-right { position: absolute; bottom: 2px; right: 4px; font-size: 15px; font-weight: bold; color: #38bdf8; }
@@ -76,8 +71,17 @@
         .key.enter { flex: 2.2; } .key.shift { flex: 2.5; } .key.space { flex: 8; }
         .key.backspace, .key.tab, .key.caps, .key.enter, .key.shift, .key.space { align-items: center; justify-content: center; }
 
-        /* Finger Animations */
-        .hands-section { height: 18vh; background-color: #0f172a; display: flex; justify-content: center; gap: 120px; align-items: center; border-top: 2px solid #1e293b; padding: 5px; }
+        /* Left & Right Hand Positioning */
+        .hands-section-wrapper {
+            background-color: #0f172a; border-top: 2px solid #1e293b; height: 18vh;
+            display: flex; justify-content: center; width: 100%;
+        }
+        .hands-container-layout {
+            display: flex; justify-content: space-between; /* Pushes hands to left and right */
+            align-items: center; width: 100%; max-width: 1050px; /* Same as keyboard width */
+            padding: 5px 60px; /* Spacing from edges */
+        }
+        
         .hand-container { display: flex; gap: 12px; align-items: flex-end; }
         .finger-node { background-color: #334155; border: 2px solid #475569; border-radius: 20px 20px 5px 5px; width: 32px; color: white; font-size: 11px; font-weight: bold; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding-bottom: 8px; transition: all 0.2s; }
         #L5, #R5 { height: 60px; } #L4, #R4 { height: 80px; } #L3, #R3 { height: 90px; } #L2, #R2 { height: 82px; } #L1, #R1 { height: 45px; border-radius: 15px; width: 36px; } 
@@ -95,15 +99,14 @@
         <div class="top-controls">
             <div class="lang-selectors">
                 <button class="btn-mode active" id="btn-en" onclick="setLanguage('EN')">ENGLISH</button>
-                <button class="btn-mode" id="btn-ml" onclick="setLanguage('ML')">മലയാളം (InScript)</button>
+                <button class="btn-mode" id="btn-ml" onclick="setLanguage('ML')">മലയാളം (Custom Shift)</button>
             </div>
             <select class="selector" id="lessonSelect" onchange="loadLesson()">
-                <option value="1">Lesson 1: Home Row Basics</option>
-                <option value="2">Lesson 2: Top Row Reach</option>
-                <option value="3">Lesson 3: Bottom Row Reach</option>
-                <option value="4">Lesson 4: Shift & Capitals</option>
-                <option value="5">Lesson 5: Paragraphs & Speed Test</option>
-                <option value="6">Lesson 6: ചില്ലക്ഷരങ്ങൾ (ർ ൽ ൾ ൻ ൺ)</option>
+                <option value="1">Lesson 1: Top & Bottom Toggle</option>
+                <option value="2">Lesson 2: Top Row Words</option>
+                <option value="3">Lesson 3: Bottom Row Words</option>
+                <option value="4">Lesson 4: Capital & Shift Flow</option>
+                <option value="5">Lesson 5: Sentences & Speed Test</option>
             </select>
             <button class="btn-mode" style="background-color: #ef4444;" onclick="resetApp()">Restart Lesson</button>
         </div>
@@ -117,31 +120,34 @@
         </div>
     </div>
 
-    <!-- TypingStudy Style Text Board -->
+    <!-- Text Board -->
     <div class="text-board-container">
-        <div class="text-board" id="textBoard">
-            <!-- Content dynamically generated -->
-        </div>
+        <div class="text-board" id="textBoard"></div>
     </div>
 
     <div class="keyboard-section">
         <div class="keyboard" id="keyboardContainer"></div>
     </div>
 
-    <div class="hands-section">
-        <div class="hand-container">
-            <div class="finger-node" id="L5"><span>P</span></div>
-            <div class="finger-node" id="L4"><span>R</span></div>
-            <div class="finger-node" id="L3"><span>M</span></div>
-            <div class="finger-node" id="L2"><span>I</span></div>
-            <div class="finger-node" id="L1"><span>T</span></div>
-        </div>
-        <div class="hand-container">
-            <div class="finger-node" id="R1"><span>T</span></div>
-            <div class="finger-node" id="R2"><span>I</span></div>
-            <div class="finger-node" id="R3"><span>M</span></div>
-            <div class="finger-node" id="R4"><span>R</span></div>
-            <div class="finger-node" id="R5"><span>P</span></div>
+    <!-- Separated Hands Layout -->
+    <div class="hands-section-wrapper">
+        <div class="hands-container-layout">
+            <!-- Left Hand -->
+            <div class="hand-container">
+                <div class="finger-node" id="L5"><span>P</span></div>
+                <div class="finger-node" id="L4"><span>R</span></div>
+                <div class="finger-node" id="L3"><span>M</span></div>
+                <div class="finger-node" id="L2"><span>I</span></div>
+                <div class="finger-node" id="L1"><span>T</span></div>
+            </div>
+            <!-- Right Hand -->
+            <div class="hand-container">
+                <div class="finger-node" id="R1"><span>T</span></div>
+                <div class="finger-node" id="R2"><span>I</span></div>
+                <div class="finger-node" id="R3"><span>M</span></div>
+                <div class="finger-node" id="R4"><span>R</span></div>
+                <div class="finger-node" id="R5"><span>P</span></div>
+            </div>
         </div>
     </div>
 
@@ -151,22 +157,19 @@
         let currentLang = 'EN'; let typedText = ''; let currentTargetText = ''; 
         let isShiftPressed = false; let isCapsLockOn = false;
         
-        // Typing Stats Variables
         let startTime = null; let timerInterval = null; 
         let errorCount = 0; let totalKeystrokes = 0; let isLessonFinished = false;
 
         const lessons = {
             EN: { 
-                1: ["asdf jkl; asdf jkl; asdf jkl;"], 2: ["quiet row type pure layout write"], 
-                3: ["pack my box with five dozen zinc matrix"], 4: ["Kerala India Malappuram Wandoor Nilambur"], 
-                5: ["Typing study style brings a professional dashboard to track your speed and accuracy in real time."],
-                6: ["1 2 3 4 5 6 7 8 9 0", "! @ # $ % ^ & * ( )"]
+                1: ["aA sS dD fF jJ kK lL ;:"], 2: ["Quiet Row Type Pure Layout Write"], 
+                3: ["Pack my box with five dozen zinc matrix"], 4: ["Kerala India Malappuram Wandoor Nilambur"], 
+                5: ["Typing study style brings a professional dashboard to track your speed."]
             },
             ML: { 
-                1: ["ോേ്ിു പതകചട പതകചട"], 2: ["ൌൈാീൂ ഭങഘധഝ ആന ഇല"], 
-                3: ["െംനവലസ ,.യ മരം തറ പന്ത്"], 4: ["കേരളം കമ്പ്യൂട്ടർ പരിശീലനം ആരംഭിച്ചു"], 
-                5: ["ടൈപ്പിംഗ് സ്പീഡ് കൂട്ടാൻ ഈ പുതിയ ലേഔട്ട് വളരെ അധികം സഹായിക്കും. ഇത് വളരെ കൃത്യമാണ്."],
-                6: ["അവർ മയിൽ അവൾ അവൻ കൺമണി", "മക്കൾ അർദ്ധരാത്രി പോയവൻ"] 
+                1: ["അാ ആാ ഇീ ഈീ ഉൂ ഊൂ"], 2: ["കഖ ഗഘ ങഹ ചഛ ജഝ"], 
+                3: ["പഫ ബഭ തഥ ദധ നണ"], 4: ["കേരളം എൻ്റെ മാതൃനാടാണ്"], 
+                5: ["ഈ പുതിയ രീതിയിൽ ഷിഫ്റ്റ് അമർത്തുമ്പോൾ താഴെയുള്ള അക്ഷരങ്ങൾ ലഭിക്കും."]
             }
         };
 
@@ -241,7 +244,6 @@
                 const rowDiv = document.createElement('div'); rowDiv.className = 'row';
                 row.forEach(key => {
                     const btn = document.createElement('button'); 
-                    let isEngUpper = isShiftPressed !== isCapsLockOn;
                     
                     btn.className = `key ${key.normal.class || ''}`; btn.id = key.code;
                     if(key.code === 'CapsLock' && isCapsLockOn) btn.classList.add('active-caps');
@@ -257,7 +259,6 @@
                             <span class="key-bottom-right">${key.normal.mal}</span>
                         `;
                     }
-                    
                     btn.onclick = () => triggerKey(key.code);
                     rowDiv.appendChild(btn);
                 });
@@ -266,27 +267,22 @@
             updateUI();
         }
 
-        // Live Dashboard Functions
         function startTimer() {
             if (!startTime) {
-                startTime = new Date();
-                timerInterval = setInterval(updateStats, 1000);
+                startTime = new Date(); timerInterval = setInterval(updateStats, 1000);
             }
         }
+
         function updateStats() {
             if (!startTime || isLessonFinished) return;
-            const now = new Date();
-            const timeDiff = Math.floor((now - startTime) / 1000);
-            const minutes = Math.floor(timeDiff / 60);
-            const seconds = timeDiff % 60;
+            const now = new Date(); const timeDiff = Math.floor((now - startTime) / 1000);
+            const minutes = Math.floor(timeDiff / 60); const seconds = timeDiff % 60;
             document.getElementById('time').innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
             if (timeDiff > 0 && typedText.length > 0) {
-                // Standard WPM formula: (characters / 5) / minutes
                 let wpm = Math.round(((typedText.length / 5) / timeDiff) * 60);
                 document.getElementById('wpm').innerText = wpm;
             }
-            
             let acc = totalKeystrokes > 0 ? Math.round(((totalKeystrokes - errorCount) / totalKeystrokes) * 100) : 100;
             document.getElementById('acc').innerText = acc;
         }
@@ -294,8 +290,7 @@
         function loadLesson() {
             const list = lessons[currentLang][document.getElementById('lessonSelect').value];
             currentTargetText = list[Math.floor(Math.random() * list.length)]; 
-            resetStats();
-            updateUI();
+            resetStats(); updateUI();
         }
 
         function resetStats() {
@@ -314,7 +309,7 @@
             
             if (progress >= currentTargetText.length && currentTargetText.length > 0) {
                 isLessonFinished = true; clearInterval(timerInterval);
-                board.innerHTML = `<span style='color:#4ade80;'>Lesson Completed! WPM: ${document.getElementById('wpm').innerText} | Accuracy: ${document.getElementById('acc').innerText}%</span><br><br><span style='font-size:20px; color:#94a3b8;'>Loading next in 2 seconds...</span>`;
+                board.innerHTML = `<span style='color:#4ade80;'>Lesson Completed! WPM: ${document.getElementById('wpm').innerText} | Accuracy: ${document.getElementById('acc').innerText}%</span><br><br><span style='font-size:20px; color:#94a3b8;'>Loading next...</span>`;
                 setTimeout(loadLesson, 2500); return;
             }
 
@@ -338,8 +333,9 @@
                         if (k.normal.eng === nextChar) { targetCode = k.code; fingerId = k.normal.finger; requiresShift = isCapsLockOn; } 
                         else if (k.shifted.eng === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = !isCapsLockOn; }
                     } else {
-                        if (k.normal.mal === nextChar) { targetCode = k.code; fingerId = k.normal.finger; requiresShift = false; } 
-                        else if (k.shifted.mal === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = true; }
+                        // INVERTED LOGIC FOR MALAYALAM AS REQUESTED
+                        if (k.shifted.mal === nextChar) { targetCode = k.code; fingerId = k.shifted.finger; requiresShift = isCapsLockOn; } // Top Letter
+                        else if (k.normal.mal === nextChar) { targetCode = k.code; fingerId = k.normal.finger; requiresShift = !isCapsLockOn; } // Bottom Letter
                     }
                 }));
             }
@@ -353,16 +349,10 @@
         }
 
         function triggerKey(code) {
-            if (isLessonFinished) return;
-            if (code === 'Backspace') { 
-                // Typing study strict mode usually doesn't need backspace, but we allow it for mistakes if we want.
-                // Here we keep strict mode (can only advance on correct key) so backspace is ignored or just plays an animation.
-                return; 
-            }
+            if (isLessonFinished || code === 'Backspace') return;
             if (typedText.length >= currentTargetText.length) return;
 
-            startTimer(); // Start timer on first keystroke
-            totalKeystrokes++;
+            startTimer(); totalKeystrokes++;
 
             let expected = currentTargetText.charAt(typedText.length);
             let activeKey = null; pcKeyboardRows.forEach(row => row.forEach(k => { if(k.code === code) activeKey = k; }));
@@ -372,10 +362,12 @@
             if (code === 'Space') {
                 inputChar = ' ';
             } else {
+                let isShiftedState = isShiftPressed !== isCapsLockOn;
                 if (currentLang === 'EN') {
-                    inputChar = (isShiftPressed !== isCapsLockOn) ? activeKey.shifted.eng : activeKey.normal.eng;
+                    inputChar = isShiftedState ? activeKey.shifted.eng : activeKey.normal.eng;
                 } else {
-                    inputChar = isShiftPressed ? activeKey.shifted.mal : activeKey.normal.mal;
+                    // INVERTED LOGIC FOR MALAYALAM AS REQUESTED
+                    inputChar = isShiftedState ? activeKey.normal.mal : activeKey.shifted.mal;
                 }
             }
 
@@ -384,9 +376,7 @@
                 typedText += expected; updateUI(); 
                 keyEl?.classList.add('active'); setTimeout(() => keyEl?.classList.remove('active'), 100);
             } else { 
-                errorCount++;
-                document.getElementById('errors').innerText = errorCount;
-                updateStats(); // Update accuracy immediately
+                errorCount++; document.getElementById('errors').innerText = errorCount; updateStats(); 
                 keyEl?.classList.add('wrong-active'); setTimeout(() => keyEl?.classList.remove('wrong-active'), 150); 
             }
         }
